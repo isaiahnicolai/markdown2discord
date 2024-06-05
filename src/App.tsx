@@ -120,7 +120,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <img src="/icon.png" alt="App icon" className="App-icon" />
+        <img src="icon.png" alt="App icon" className="App-icon" />
         <h1 className="App-title">Markdown to Discord Formatter</h1>
       </header>
       <div className="container">
