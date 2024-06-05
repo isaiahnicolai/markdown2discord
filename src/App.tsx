@@ -6,6 +6,12 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-diff';
 import 'prismjs/components/prism-asciidoc';
 import 'prismjs/components/prism-markdown';
+import 'prismjs/components/prism-csharp';
+import 'prismjs/components/prism-css';
+import 'prismjs/components/prism-ini';
+import 'prismjs/components/prism-json';
+import 'prismjs/components/prism-yaml';
+
 
 const App: React.FC = () => {
   const [inputText, setInputText] = useState('');
@@ -17,8 +23,40 @@ const App: React.FC = () => {
     convertMarkdownToDiscord(e.target.value);
   };
 
+  const languageMap: { [key: string]: string } = {
+    python: 'py',
+    asciidoc: 'asciidoc',
+    autohotkey: 'autohotkey',
+    bash: 'bash',
+    coffeescript: 'coffeescript',
+    cpp: 'cpp',
+    cs: 'cs',
+    css: 'css',
+    diff: 'diff',
+    fix: 'fix',
+    glsl: 'glsl',
+    ini: 'ini',
+    json: 'json',
+    md: 'md',
+    ml: 'ml',
+    prolog: 'prolog',
+    ps: 'ps',
+    py: 'py',
+    tex: 'tex',
+    xl: 'xl',
+    xml: 'xml',
+    yaml: 'yaml'
+  };
+
   const convertMarkdownToDiscord = (text: string) => {
     let formattedText = text;
+
+    // Replace language-specific code blocks for Discord output
+    for (const [key, value] of Object.entries(languageMap)) {
+      const regex = new RegExp(`\`\`\`${key}\\n([\\s\\S]*?)\`\`\``, 'g');
+      formattedText = formattedText.replace(regex, `\n\`\`\`${value}\n$1\`\`\``);
+    }
+
 
     // HTML color conversion
     formattedText = formattedText
