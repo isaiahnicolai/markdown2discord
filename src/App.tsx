@@ -1,46 +1,11 @@
 import React, { useState, useEffect } from 'react';
-
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
-import 'prismjs/components/prism-python'; 
-import 'prismjs/components/prism-asciidoc';
-import 'prismjs/components/prism-autohotkey';
-import 'prismjs/components/prism-bash';
-import 'prismjs/components/prism-coffeescript';
-import 'prismjs/components/prism-markup';
+import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-typescript';
-import 'prismjs/components/prism-jsx';
-import 'prismjs/components/prism-tsx';
-import 'prismjs/components/prism-css';
-import 'prismjs/components/prism-scss';
-import 'prismjs/components/prism-json';
-import 'prismjs/components/prism-yaml';
-import 'prismjs/components/prism-java';
-import 'prismjs/components/prism-php';
-import 'prismjs/components/prism-ruby';
-import 'prismjs/components/prism-go';
-import 'prismjs/components/prism-swift';
-import 'prismjs/components/prism-rust';
-import 'prismjs/components/prism-kotlin';
-import 'prismjs/components/prism-scala';
-import 'prismjs/components/prism-csharp';
-import 'prismjs/components/prism-objectivec';
-import 'prismjs/components/prism-elixir';
-import 'prismjs/components/prism-erlang';
-import 'prismjs/components/prism-haskell';
-import 'prismjs/components/prism-lua';
-import 'prismjs/components/prism-perl';
-import 'prismjs/components/prism-powershell';
-import 'prismjs/components/prism-sql';
-import 'prismjs/components/prism-graphql';
-import 'prismjs/components/prism-docker';
-import 'prismjs/components/prism-nginx';
-import 'prismjs/components/prism-apacheconf';
-import 'prismjs/components/prism-toml';
-import 'prismjs/components/prism-vim';
-import 'prismjs/components/prism-batch';
-import 'prismjs/components/prism-makefile';
+import 'prismjs/components/prism-diff';
+import 'prismjs/components/prism-asciidoc';
+import 'prismjs/components/prism-markdown';
 
 const App: React.FC = () => {
   const [inputText, setInputText] = useState('');
@@ -52,39 +17,19 @@ const App: React.FC = () => {
     convertMarkdownToDiscord(e.target.value);
   };
 
-  const languageMap: { [key: string]: string } = {
-    python: 'py',
-    asciidoc: 'asciidoc',
-    autohotkey: 'autohotkey',
-    bash: 'bash',
-    coffeescript: 'coffeescript',
-    cpp: 'cpp',
-    cs: 'cs',
-    css: 'css',
-    diff: 'diff',
-    fix: 'fix',
-    glsl: 'glsl',
-    ini: 'ini',
-    json: 'json',
-    md: 'md',
-    ml: 'ml',
-    prolog: 'prolog',
-    ps: 'ps',
-    py: 'py',
-    tex: 'tex',
-    xl: 'xl',
-    xml: 'xml',
-    yaml: 'yaml'
-  };
-
   const convertMarkdownToDiscord = (text: string) => {
     let formattedText = text;
 
-    // Replace language-specific code blocks for Discord output
-    for (const [key, value] of Object.entries(languageMap)) {
-      const regex = new RegExp(`\`\`\`${key}\\n([\\s\\S]*?)\`\`\``, 'g');
-      formattedText = formattedText.replace(regex, `\n\`\`\`${value}\n$1\`\`\``);
-    }
+    // HTML color conversion
+    formattedText = formattedText
+      .replace(/<font color="lightblue">([\s\S]*?)<\/font>/gi, '```fix\n$1\n```')
+      .replace(/<font color="red">([\s\S]*?)<\/font>/gi, '```diff\n-$1\n```')
+      .replace(/<font color="green">([\s\S]*?)<\/font>/gi, '```diff\n+$1\n```')
+      .replace(/<font color="gray">([\s\S]*?)<\/font>/gi, '```css\n$1\n```')
+      .replace(/<span style="color:\s*lightblue;">([\s\S]*?)<\/span>/gi, '```fix\n$1\n```')
+      .replace(/<span style="color:\s*red;">([\s\S]*?)<\/span>/gi, '```diff\n-$1\n```')
+      .replace(/<span style="color:\s*green;">([\s\S]*?)<\/span>/gi, '```diff\n+$1\n```')
+      .replace(/<span style="color:\s*gray;">([\s\S]*?)<\/span>/gi, '```css\n$1\n```');
 
     formattedText = formattedText
       .replace(/\*\*(.*?)\*\*/g, '**$1**') // Bold
@@ -102,10 +47,10 @@ const App: React.FC = () => {
       .replace(/^(\d+)\. (.*$)/gim, '$1. $2'); // Ordered list
 
     setOutputText(formattedText);
-    
+
     // Generate preview text for HTML rendering
     const preview = formattedText
-      .replace(/```(py|asciidoc|autohotkey|bash|coffeescript|cpp|cs|css|diff|fix|glsl|ini|json|md|ml|prolog|ps|tex|xl|xml|yaml)\n([\s\S]*?)```/g, (match, lang, code) => {
+      .replace(/```(py|asciidoc|autohotkey|bash|coffeescript|cpp|cs|css|diff|fix|glsl|ini|json|md|ml|prolog|ps|tex|xl|xml|yaml)\n([\s\S]*?)```/g, (_, lang, code) => {
         return `<pre><code class="language-${lang}">${code}</code></pre>`;
       })
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
@@ -136,10 +81,10 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-    <header className="App-header">
-  <img src="/icon.png" alt="App icon" className="App-icon" />
-  <h1 className="App-title">Markdown to Discord Formatter</h1>
-</header>
+      <header className="App-header">
+        <img src="/icon.png" alt="App icon" className="App-icon" />
+        <h1 className="App-title">Markdown to Discord Formatter</h1>
+      </header>
       <div className="container">
         <textarea
           placeholder="Enter your markdown here..."

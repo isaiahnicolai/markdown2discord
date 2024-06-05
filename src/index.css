@@ -6,7 +6,9 @@ body {
   background-color: #67b4fe;
 }
 
-
+.language-fix {
+  color: lightblue;
+}
 
 .App-header {
   background-color: #282c34;
