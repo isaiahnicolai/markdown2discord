@@ -4,6 +4,9 @@
 
 This project is a simple React application that converts regular markdown into Discord-specific formatting. The app provides an input field where you can enter your markdown text, and it displays a preview of how the text will look in Discord's formatting. The preview window renders a styled version of the markdown to simulate how it will appear on Discord, but to use the actual Discord markdown, you will need to copy the text using the provided copy button.
 
+
+![alt text](https://github.com/isaiahnicolai/markdown2discord/blob/gh-pages/assets/markdown2discord_interface.PNG)?raw=true)
+
 ## Features
 
 - **Markdown to Discord Formatting**: Converts markdown syntax to Discord-specific formatting.
